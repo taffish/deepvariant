@@ -1,0 +1,50 @@
+[package]
+name = "deepvariant"
+kind = "tool"
+version = "1.10.0"
+release = 1
+license = "Apache-2.0"
+main = "src/main.taf"
+
+[meta]
+domain = "bio"
+categories = ["variant-calling", "genomics", "deep-learning", "vcf", "bam", "cram"]
+keywords = ["DeepVariant", "variant calling", "germline", "deep learning", "TensorFlow", "WGS", "WES", "PacBio", "ONT", "RNA-seq", "BAM", "CRAM", "VCF", "gVCF"]
+description = "DeepVariant 1.10.0 CPU runtime for germline variant calling from aligned BAM/CRAM reads to VCF or gVCF outputs."
+
+[repository]
+url = "https://github.com/taffish/deepvariant"
+
+[command]
+name = "taf-deepvariant"
+
+[runtime]
+pipe = true
+command_mode = true
+
+[container]
+image = "ghcr.io/taffish/deepvariant:1.10.0-r1"
+dockerfile = "docker/Dockerfile"
+build_platforms = "linux/amd64"
+
+[upstream]
+name = "DeepVariant"
+type = "github"
+repo = "google/deepvariant"
+homepage = "https://github.com/google/deepvariant"
+manual = "https://github.com/google/deepvariant/blob/v1.10.0/docs/deepvariant-quick-start.md"
+release_url = "https://github.com/google/deepvariant/releases/tag/v1.10.0"
+downloads = "docker://google/deepvariant:1.10.0@sha256:962e5a83b1d76aae6990625d47102785f791603f2138aa1fa9aa4fb6a2eecbe6; https://github.com/google/deepvariant/archive/refs/tags/v1.10.0.tar.gz"
+version = "1.10.0"
+license = "BSD-3-Clause"
+citation = "Poplin et al. 2018"
+doi = "10.1038/nbt.4235"
+pmid = "30247488"
+watch = "tags"
+strip_prefix = "v"
+
+[smoke]
+backend = "docker"
+timeout = 600
+exist = ["run_deepvariant", "make_examples", "call_variants", "postprocess_variants", "vcf_stats_report", "show_examples", "runtime_by_region_vis", "multisample_make_examples", "make_examples_somatic", "labeled_examples_to_vcf", "convert_to_saved_model", "run_oracle_inference", "train", "fast_pipeline", "samtools", "bcftools", "python3", "bash", "parallel"]
+test = ["run_deepvariant --version 2>&1 | grep -Fx 'DeepVariant version 1.10.0' >/dev/null", "run_deepvariant --helpshort 2>&1 | grep -F -- '--model_type' >/dev/null && run_deepvariant --helpshort 2>&1 | grep -F -- '--output_vcf' >/dev/null && run_deepvariant --helpshort 2>&1 | grep -F -- '--dry_run' >/dev/null", "make_examples --helpfull 2>&1 | grep -F -- '--reads' >/dev/null && call_variants --helpfull 2>&1 | grep -F -- '--outfile' >/dev/null && postprocess_variants --helpfull 2>&1 | grep -F -- '--outfile' >/dev/null", "test -s /opt/models/wgs/saved_model.pb && test -s /opt/models/wes/saved_model.pb && test -s /opt/models/pacbio/saved_model.pb && test -s /opt/models/ont_r104/saved_model.pb && test -s /opt/models/hybrid_pacbio_illumina/saved_model.pb && test -s /opt/models/masseq/saved_model.pb && test -s /opt/models/rnaseq/saved_model.pb", "samtools --version 2>&1 | grep -F 'samtools 1.15' >/dev/null && bcftools --version 2>&1 | grep -F 'bcftools 1.15' >/dev/null", "tmp=/tmp/taf-deepvariant-dryrun-$$; rm -rf \"$tmp\"; mkdir -p \"$tmp\"; run_deepvariant --model_type=WGS --ref=/tmp/missing-ref.fa --reads=/tmp/missing-reads.bam --output_vcf=\"$tmp/out.vcf.gz\" --output_gvcf=\"$tmp/out.g.vcf.gz\" --intermediate_results_dir=\"$tmp/intermediate\" --num_shards=1 --dry_run=true 2>&1 | grep -F '/opt/deepvariant/bin/make_examples' >/dev/null; rm -rf \"$tmp\""]
