@@ -1,4 +1,4 @@
-taf-deepvariant 1.10.0-r1
+taf-deepvariant 1.10.0-r2
 
 DeepVariant 1.10.0 CPU runtime for germline variant calling from aligned
 BAM/CRAM reads to VCF or gVCF outputs.

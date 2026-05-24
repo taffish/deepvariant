@@ -1,6 +1,6 @@
 # taf-deepvariant
 
-`taf-deepvariant` packages DeepVariant `1.10.0-r1`, the Google DeepVariant
+`taf-deepvariant` packages DeepVariant `1.10.0-r2`, the Google DeepVariant
 CPU Docker runtime for germline variant calling from aligned BAM/CRAM reads to
 VCF or gVCF outputs.
 
@@ -9,8 +9,8 @@ Package identity:
 - name: `deepvariant`
 - command: `taf-deepvariant`
 - kind: `tool`
-- TAFFISH version: `1.10.0-r1`
-- container image: `ghcr.io/taffish/deepvariant:1.10.0-r1`
+- TAFFISH version: `1.10.0-r2`
+- container image: `ghcr.io/taffish/deepvariant:1.10.0-r2`
 - upstream release/tag: `v1.10.0`
 - upstream Docker base: `google/deepvariant:1.10.0`
 - upstream Docker digest: `sha256:962e5a83b1d76aae6990625d47102785f791603f2138aa1fa9aa4fb6a2eecbe6`
@@ -53,7 +53,7 @@ taf install deepvariant
 Install the exact release:
 
 ```sh
-taf install deepvariant 1.10.0-r1
+taf install deepvariant 1.10.0-r2
 ```
 
 For local testing before this app is published to the public index:
@@ -219,6 +219,10 @@ in diploid organisms and that the included models are trained on human data.
 Non-human organisms, unusual ploidy or copy-number states, custom models,
 somatic calling, trio calling, cohort genotyping, benchmarking with `hap.py`,
 and external database/reference management need additional workflow design.
+
+This `r2` release fixes the index smoke check for the absl boolean help spelling
+`--[no]dry_run`; the upstream DeepVariant version, Dockerfile runtime, official
+base image digest, and command behavior are otherwise unchanged from `r1`.
 
 Smoke tests validate the runtime version, core help paths, bundled model
 directories, upstream-bundled `samtools`/`bcftools`, and a `run_deepvariant`
